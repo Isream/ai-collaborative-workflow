@@ -8,6 +8,10 @@ param(
     [switch]$Uninstall  # 使用 -Uninstall 参数来卸载
 )
 
+# 解决 PowerShell 中文乱码
+$OutputEncoding = [Console]::OutputEncoding = [Text.UTF8Encoding]::new()
+$PSDefaultParameterValues['*:Encoding'] = 'utf8'
+
 $ErrorActionPreference = "Stop"
 
 # 获取用户 prompts 目录
