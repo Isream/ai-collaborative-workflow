@@ -34,9 +34,9 @@ $SCRIPT_DIR = Split-Path -Parent $MyInvocation.MyCommand.Path
 if ($Uninstall) {
     Write-Host "`n[卸载] 正在移除..."
     $targets = @(
-        "$VSCODE_PROMPTS\agents\orchestrator.agent.md",
-        "$VSCODE_PROMPTS\agents\executor.agent.md",
-        "$VSCODE_PROMPTS\prompts\new-workflow.prompt.md"
+        "$VSCODE_PROMPTS\orchestrator.agent.md",
+        "$VSCODE_PROMPTS\executor.agent.md",
+        "$VSCODE_PROMPTS\new-workflow.prompt.md"
     )
     foreach ($t in $targets) {
         if (Test-Path $t) {
@@ -44,27 +44,24 @@ if ($Uninstall) {
             Write-Host "  已删除: $t"
         }
     }
+    # 清理遗留的旧路径
+    Remove-Item "$VSCODE_PROMPTS\agents" -Force -Recurse -ErrorAction SilentlyContinue
+    Remove-Item "$VSCODE_PROMPTS\prompts" -Force -Recurse -ErrorAction SilentlyContinue
     Write-Host "`n[完成] 卸载成功"
     exit 0
 }
 
 Write-Host "`n[安装] 正在安装 AI 协同工作流..."
 
-# 创建目标目录
-$agentDir = "$VSCODE_PROMPTS\agents"
-$promptDir = "$VSCODE_PROMPTS\prompts"
-New-Item -ItemType Directory -Force -Path $agentDir | Out-Null
-New-Item -ItemType Directory -Force -Path $promptDir | Out-Null
-
-# 复制 Agent 文件
+# 复制 Agent 文件（直接放在 prompts 根目录，不要子文件夹！）
 $agentSource = "$SCRIPT_DIR\.github\agents"
-Copy-Item "$agentSource\orchestrator.agent.md" -Destination $agentDir -Force
+Copy-Item "$agentSource\orchestrator.agent.md" -Destination $VSCODE_PROMPTS -Force
 Write-Host "  [OK] orchestrator.agent.md"
-Copy-Item "$agentSource\executor.agent.md" -Destination $agentDir -Force
+Copy-Item "$agentSource\executor.agent.md" -Destination $VSCODE_PROMPTS -Force
 Write-Host "  [OK] executor.agent.md"
 
 # 复制 Prompt 文件
-Copy-Item "$SCRIPT_DIR\.github\prompts\new-workflow.prompt.md" -Destination $promptDir -Force
+Copy-Item "$SCRIPT_DIR\.github\prompts\new-workflow.prompt.md" -Destination $VSCODE_PROMPTS -Force
 Write-Host "  [OK] new-workflow.prompt.md"
 
 # 复制项目级文件（如果指定了目标目录）

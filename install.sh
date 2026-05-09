@@ -37,9 +37,12 @@ VSCODE_PROMPTS=$(detect_vscode_prompts_dir)
 # 处理卸载
 if [ "${1:-}" = "--uninstall" ] || [ "${1:-}" = "-u" ]; then
     echo -e "${YELLOW}🗑️  正在卸载...${NC}"
-    rm -f "$VSCODE_PROMPTS/agents/orchestrator.agent.md"
-    rm -f "$VSCODE_PROMPTS/agents/executor.agent.md"
-    rm -f "$VSCODE_PROMPTS/prompts/new-workflow.prompt.md"
+    rm -f "$VSCODE_PROMPTS/orchestrator.agent.md"
+    rm -f "$VSCODE_PROMPTS/executor.agent.md"
+    rm -f "$VSCODE_PROMPTS/new-workflow.prompt.md"
+    # 清理遗留的旧路径
+    rm -rf "$VSCODE_PROMPTS/agents" 2>/dev/null
+    rm -rf "$VSCODE_PROMPTS/prompts" 2>/dev/null
     echo -e "${GREEN}✅ 卸载完成${NC}"
     exit 0
 fi
@@ -48,19 +51,15 @@ echo -e "${CYAN}VS Code Prompts 目录: $VSCODE_PROMPTS${NC}"
 echo ""
 echo -e "${GREEN}📦 正在安装 AI 协同工作流...${NC}"
 
-# 创建目标目录
-mkdir -p "$VSCODE_PROMPTS/agents"
-mkdir -p "$VSCODE_PROMPTS/prompts"
-
-# 复制 Agent 文件
-cp "$SCRIPT_DIR/.github/agents/orchestrator.agent.md" "$VSCODE_PROMPTS/agents/"
+# 复制 Agent 文件（直接放根目录，不要子文件夹！）
+cp "$SCRIPT_DIR/.github/agents/orchestrator.agent.md" "$VSCODE_PROMPTS/"
 echo -e "  ${GREEN}✅ orchestrator.agent.md${NC}"
 
-cp "$SCRIPT_DIR/.github/agents/executor.agent.md" "$VSCODE_PROMPTS/agents/"
+cp "$SCRIPT_DIR/.github/agents/executor.agent.md" "$VSCODE_PROMPTS/"
 echo -e "  ${GREEN}✅ executor.agent.md${NC}"
 
 # 复制 Prompt 文件
-cp "$SCRIPT_DIR/.github/prompts/new-workflow.prompt.md" "$VSCODE_PROMPTS/prompts/"
+cp "$SCRIPT_DIR/.github/prompts/new-workflow.prompt.md" "$VSCODE_PROMPTS/"
 echo -e "  ${GREEN}✅ new-workflow.prompt.md${NC}"
 
 # 如果指定了目标项目，复制项目级文件
