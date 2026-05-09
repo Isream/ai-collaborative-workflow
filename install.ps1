@@ -67,20 +67,21 @@ Write-Host "  ✅ new-workflow.prompt.md" -ForegroundColor Green
 # 复制项目级指令到目标项目（如果指定了目标目录）
 $targetProject = $args[0]
 if ($targetProject) {
-    $targetProject = Resolve-Path $targetProject -ErrorAction SilentlyContinue
-    if ($targetProject) {
-        Copy-Item "$SCRIPT_DIR\.github\copilot-instructions.md" -Destination "$targetProject\.github\" -Force
-        Copy-Item "$SCRIPT_DIR\.vscode\settings.json" -Destination "$targetProject\.vscode\" -Force
-        
-        # 创建 workflow 目录
-        New-Item -ItemType Directory -Force -Path "$targetProject\workflow\completed" | Out-Null
-        Copy-Item "$SCRIPT_DIR\workflow\tasks.md" -Destination "$targetProject\workflow\" -Force
-        Copy-Item "$SCRIPT_DIR\workflow\current-task.md" -Destination "$targetProject\workflow\" -Force
-        
-        Write-Host "  ✅ 项目文件已复制到: $targetProject" -ForegroundColor Green
-    } else {
-        Write-Host "  ⚠️  目标项目路径无效，跳过项目级文件" -ForegroundColor Yellow
-    }
+    # 将相对路径转为绝对路径（目录不存在也能正确解析）
+    $targetProject = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($targetProject)
+    
+    # 创建目标子目录
+    New-Item -ItemType Directory -Force -Path "$targetProject\.github" | Out-Null
+    New-Item -ItemType Directory -Force -Path "$targetProject\.vscode" | Out-Null
+    New-Item -ItemType Directory -Force -Path "$targetProject\workflow\completed" | Out-Null
+
+    Copy-Item "$SCRIPT_DIR\.github\copilot-instructions.md" -Destination "$targetProject\.github\" -Force
+    Copy-Item "$SCRIPT_DIR\.vscode\settings.json" -Destination "$targetProject\.vscode\" -Force
+    
+    Copy-Item "$SCRIPT_DIR\workflow\tasks.md" -Destination "$targetProject\workflow\" -Force
+    Copy-Item "$SCRIPT_DIR\workflow\current-task.md" -Destination "$targetProject\workflow\" -Force
+    
+    Write-Host "  ✅ 项目文件已复制到: $targetProject" -ForegroundColor Green
 }
 
 Write-Host "`n🎉 安装完成！" -ForegroundColor Green
