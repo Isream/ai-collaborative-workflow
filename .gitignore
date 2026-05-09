@@ -1,0 +1,11 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+*.swp
+*.swo
+
+# Workflow completed tasks (user-specific, not shared)
+workflow/completed/*.md
+!workflow/completed/.gitkeep

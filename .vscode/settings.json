@@ -1,0 +1,7 @@
+{
+    "chat.agent.default": "executor",
+    "chat.agent.placeholderText": "选择 Agent: Orchestrator (规划) 或 Executor (执行)",
+    "chat.promptFilesRecommendations": {
+        "new-workflow": "🚀 启动新的 AI 协同开发工作流"
+    }
+}
