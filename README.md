@@ -66,33 +66,41 @@ your-project/
 
 ## 🚀 快速开始
 
-### 第一步：安装到你的电脑
+### 第一步：安装工作流到你的项目
 
-> 🔧 **首次使用时执行一次**，之后所有工作空间都能用。
+在项目根目录执行（假设你已经 clone 或复制了这个仓库到本地）：
 
 **Windows (PowerShell)**：
 ```powershell
-.\install.ps1
+cd 你的项目目录
+.\路径\ai-collaborative-workflow\install.ps1
 ```
 
 **Ubuntu / macOS (Bash)**：
 ```bash
-chmod +x install.sh && ./install.sh
+cd 你的项目目录
+/path/to/ai-collaborative-workflow/install.sh
 ```
 
-安装后，在任何 VS Code 工作空间中打开 Copilot Chat 即可使用。
+或者直接在这个项目目录下运行，它会安装到自身：
 
-> 💡 卸载：Windows 运行 `.\install.ps1 -Uninstall`，Linux 运行 `./install.sh --uninstall`
+```powershell
+# Windows
+cd ai-collaborative-workflow
+.\install.ps1
+```
+
+原理：安装脚本会把 Agent 和 Prompt 文件复制到**当前工作空间的 `.github/` 目录**，这是最稳定、兼容所有 VS Code 版本的方式。
+
+> ⚠️ VS Code 1.119+ 不读取用户级 `%APPDATA%\Code\User\prompts\` 目录的 Agent/Prompt 文件，必须用工作空间级安装。
 
 ### 第二步：在新项目中初始化
 
-**Windows**：
 ```powershell
-.\install.ps1 "C:\path\to\your-project"
-```
+# Windows - 指定目标项目
+.\install.ps1 D:\my-project
 
-**Ubuntu / macOS**：
-```bash
+# Ubuntu / macOS
 ./install.sh ~/my-project
 ```
 
